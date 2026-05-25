@@ -55,7 +55,7 @@
       z-index: 30;
     }
 
-    /* Tooltip */
+    /* Tooltip semplice */
     .tooltip {
       position: absolute;
       padding: 6px 10px;
@@ -69,6 +69,34 @@
       pointer-events: none;
       display: none;
       z-index: 40;
+    }
+
+    /* Tooltip menu a 2 voci */
+    .tooltip-menu {
+      position: absolute;
+      background: rgba(0,0,0,0.90);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      display: none;
+      z-index: 50;
+      transform: translate(-50%, -10px);
+    }
+
+    .tooltip-menu div {
+      padding: 6px 0;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .tooltip-menu div:last-child {
+      border-bottom: none;
+    }
+
+    .tooltip-menu div:hover {
+      color: yellow;
     }
 
     /* Pulsante Home */
@@ -95,99 +123,19 @@
   <div class="map-container" id="map">
     <img src="img/Trasformatore_01.jpg" alt="Planimetria Trasformatore 01" />
     <div id="tooltip" class="tooltip"></div>
+    <div id="menu" class="tooltip-menu"></div>
   </div>
 
   <script>
     // SCALA DI RIFERIMENTO: 1500 x 957 px
 
     const markers = [
-      { id: "palo_01", x: 671/1500,  y: 244/957, color: "verde",     pdf: "pdf/P_1.pdf" },
-      { id: "palo_02", x: 762/1500,  y: 244/957, color: "verde",     pdf: "pdf/P_2.pdf" },
-      { id: "palo_03", x: 851/1500,  y: 244/957, color: "verde",     pdf: "pdf/P_3.pdf" },
-      { id: "palo_04", x: 930/1500,  y: 244/957, color: "verde",     pdf: "pdf/P_4.pdf" },
-      { id: "palo_05", x: 1030/1500, y: 244/957, color: "verde",     pdf: "pdf/P_5.pdf" },
-      { id: "palo_06", x: 1120/1500, y: 244/957, color: "verde",     pdf: "pdf/P_6.pdf" },
+      { id: "palo_01", x: 671/1500,  y: 244/957, color: "verde", progetto: "pdf/P_1.pdf",  qualita: "Qualità/P_1_QLT.pdf" },
+      { id: "palo_02", x: 762/1500,  y: 244/957, color: "verde", progetto: "pdf/P_2.pdf",  qualita: "Qualità/P_2_QLT.pdf" },
+      { id: "palo_03", x: 851/1500,  y: 244/957, color: "verde", progetto: "pdf/P_3.pdf",  qualita: "Qualità/P_3_QLT.pdf" },
+      { id: "palo_04", x: 930/1500,  y: 244/957, color: "verde", progetto: "pdf/P_4.pdf",  qualita: "Qualità/P_4_QLT.pdf" },
+      { id: "palo_05", x: 1030/1500, y: 244/957, color: "verde", progetto: "pdf/P_5.pdf",  qualita: "Qualità/P_5_QLT.pdf" },
+      { id: "palo_06", x: 1120/1500, y: 244/957, color: "verde", progetto: "pdf/P_6.pdf",  qualita: "Qualità/P_6_QLT.pdf" },
 
-      { id: "palo_07", x: 671/1500,  y: 420/957, color: "verde",     pdf: "pdf/P_7.pdf" },
-      { id: "palo_08", x: 762/1500,  y: 420/957, color: "verde",     pdf: "pdf/P_8.pdf" },
-      { id: "palo_09", x: 851/1500,  y: 420/957, color: "verde",     pdf: "pdf/P_9.pdf" },
-      { id: "palo_10", x: 930/1500,  y: 420/957, color: "verde",     pdf: "pdf/P_10.pdf" },
-      { id: "palo_11", x: 1030/1500, y: 420/957, color: "verde",     pdf: "pdf/P_11.pdf" },
-      { id: "palo_12", x: 1120/1500, y: 420/957, color: "verde",     pdf: "pdf/P_12.pdf" },
-
-      { id: "palo_13", x: 603/1500,  y: 483/957, color: "celestino", pdf: "pdf/P_13.pdf" },
-      { id: "palo_14", x: 724/1500,  y: 483/957, color: "celestino", pdf: "pdf/P_14.pdf" },
-      { id: "palo_15", x: 843/1500,  y: 483/957, color: "celestino", pdf: "pdf/P_15.pdf" },
-      { id: "palo_16", x: 962/1500,  y: 483/957, color: "celestino", pdf: "pdf/P_16.pdf" },
-      { id: "palo_17", x: 1081/1500, y: 483/957, color: "celestino", pdf: "pdf/P_17.pdf" },
-      { id: "palo_18", x: 1202/1500, y: 483/957, color: "celestino", pdf: "pdf/P_18.pdf" },
-
-      { id: "palo_19", x: 603/1500,  y: 583/957, color: "celestino", pdf: "pdf/P_19.pdf" },
-      { id: "palo_20", x: 724/1500,  y: 583/957, color: "celestino", pdf: "pdf/P_20.pdf" },
-      { id: "palo_21", x: 843/1500,  y: 583/957, color: "celestino", pdf: "pdf/P_21.pdf" },
-      { id: "palo_22", x: 962/1500,  y: 583/957, color: "celestino", pdf: "pdf/P_22.pdf" },
-      { id: "palo_23", x: 1081/1500, y: 583/957, color: "celestino", pdf: "pdf/P_23.pdf" },
-      { id: "palo_24", x: 1202/1500, y: 583/957, color: "celestino", pdf: "pdf/P_24.pdf" },
-
-      { id: "palo_25", x: 603/1500,  y: 682/957, color: "celestino", pdf: "pdf/P_25.pdf" },
-      { id: "palo_26", x: 724/1500,  y: 682/957, color: "celestino", pdf: "pdf/P_26.pdf" },
-      { id: "palo_27", x: 843/1500,  y: 682/957, color: "celestino", pdf: "pdf/P_27.pdf" },
-      { id: "palo_28", x: 962/1500,  y: 682/957, color: "celestino", pdf: "pdf/P_28.pdf" },
-      { id: "palo_29", x: 1081/1500, y: 682/957, color: "celestino", pdf: "pdf/P_29.pdf" },
-      { id: "palo_30", x: 1202/1500, y: 682/957, color: "celestino", pdf: "pdf/P_30.pdf" },
-
-      { id: "palo_31", x: 603/1500,  y: 782/957, color: "celestino", pdf: "pdf/P_31.pdf" },
-      { id: "palo_32", x: 724/1500,  y: 782/957, color: "celestino", pdf: "pdf/P_32.pdf" },
-      { id: "palo_33", x: 843/1500,  y: 782/957, color: "celestino", pdf: "pdf/P_33.pdf" },
-      { id: "palo_34", x: 962/1500,  y: 782/957, color: "celestino", pdf: "pdf/P_34.pdf" },
-      { id: "palo_35", x: 1081/1500, y: 782/957, color: "celestino", pdf: "pdf/P_35.pdf" },
-      { id: "palo_36", x: 1202/1500, y: 782/957, color: "celestino", pdf: "pdf/P_36.pdf" },
-
-      { id: "palo_37", x: 603/1500,  y: 880/957, color: "celestino", pdf: "pdf/P_37.pdf" },
-      { id: "palo_38", x: 724/1500,  y: 880/957, color: "celestino", pdf: "pdf/P_38.pdf" },
-      { id: "palo_39", x: 843/1500,  y: 880/957, color: "celestino", pdf: "pdf/P_39.pdf" },
-      { id: "palo_40", x: 962/1500,  y: 880/957, color: "celestino", pdf: "pdf/P_40.pdf" },
-      { id: "palo_41", x: 1081/1500, y: 880/957, color: "celestino", pdf: "pdf/P_41.pdf" },
-      { id: "palo_42", x: 1202/1500, y: 880/957, color: "celestino", pdf: "pdf/P_42.pdf" }
-    ];
-
-    const map = document.getElementById("map");
-    const tooltip = document.getElementById("tooltip");
-
-    let selectedMarker = null;
-
-    markers.forEach(m => {
-      const el = document.createElement("div");
-      el.id = m.id;
-      el.className = "marker " + (m.color || "");
-
-      el.style.left = (m.x * 100) + "%";
-      el.style.top  = (m.y * 100) + "%";
-
-      el.addEventListener("mouseenter", () => {
-        tooltip.textContent = "Palo " + m.id.replace("palo_", "");
-        tooltip.style.left = (m.x * 100) + "%";
-        tooltip.style.top  = (m.y * 100) + "%";
-        tooltip.style.display = "block";
-      });
-
-      el.addEventListener("mouseleave", () => {
-        tooltip.style.display = "none";
-      });
-
-      el.addEventListener("click", () => {
-        if (selectedMarker) selectedMarker.classList.remove("selected");
-        el.classList.add("selected");
-        selectedMarker = el;
-
-        if (m.pdf) {
-          window.open(m.pdf, "_blank");
-        }
-      });
-
-      map.appendChild(el);
-    });
-  </script>
-
-</body>
-</html>
+      { id: "palo_07", x: 671/1500,  y: 420/957, color: "verde", progetto: "pdf/P_7.pdf",  qualita: "Qualità/P_7_QLT.pdf" },
+      { id: "palo_08", x: 762/1500,  y: 420/957, color: "verde", progetto: "pdf/P_8.pdf",  qualita: "Qual
