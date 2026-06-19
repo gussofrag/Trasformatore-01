@@ -8,16 +8,15 @@
     body {
       margin: 0;
       font-family: "Segoe UI", Tahoma, sans-serif;
-      background: #f4f4f4;
+      background: #f2f2f2;
     }
 
-    /* Contenitore mappa */
+    /* MAPPA */
     .map-container {
       position: relative;
       width: 100%;
       max-width: 100%;
       height: auto;
-      overflow: hidden;
     }
 
     .map-container img {
@@ -26,39 +25,33 @@
       display: block;
     }
 
-    /* Marker standardizzati */
+    /* MARKER */
     .marker {
       position: absolute;
-      width: 18px;
-      height: 18px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       transform: translate(-50%, -50%);
       cursor: pointer;
       border: 2px solid #fff;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
-      transition: transform 0.15s ease;
       user-select: none;
-    }
-
-    .marker:hover {
-      transform: translate(-50%, -50%) scale(1.25);
-      z-index: 20;
+      transition: 0.15s ease;
     }
 
     .verde { background: #00cc44; }
     .celestino { background: #66ccff; }
 
-    /* Marker selezionato */
     .selected {
-      transform: translate(-50%, -50%) scale(1.6) !important;
+      width: 26px !important;
+      height: 26px !important;
       border: 3px solid yellow !important;
-      z-index: 30;
+      z-index: 20;
     }
 
-    /* Tooltip semplice */
+    /* TOOLTIP */
     .tooltip {
       position: absolute;
-      padding: 6px 10px;
+      padding: 8px 12px;
       background: rgba(0,0,0,0.85);
       color: #fff;
       font-size: 15px;
@@ -68,49 +61,69 @@
       transform: translate(-50%, -130%);
       pointer-events: none;
       display: none;
-      z-index: 40;
+      z-index: 30;
     }
 
-    /* Tooltip menu a 2 voci */
-    .tooltip-menu {
-      position: absolute;
-      background: rgba(0,0,0,0.90);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: 600;
-      display: none;
-      z-index: 50;
-      transform: translate(-50%, -10px);
-    }
-
-    .tooltip-menu div {
-      padding: 6px 0;
+    .tooltip button {
+      margin-top: 6px;
+      width: 100%;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
+      font-weight: 600;
+      font-size: 14px;
     }
 
-    .tooltip-menu div:last-child {
-      border-bottom: none;
-    }
+    .btn-prog { background: #4da3ff; color: #fff; }
+    .btn-qlt  { background: #ff9933; color: #fff; }
 
-    .tooltip-menu div:hover {
-      color: yellow;
-    }
-
-    /* Pulsante Home */
-    .home-btn {
+    /* PANNELLO LEGENDA */
+    #panel {
       position: fixed;
       top: 20px;
       left: 20px;
+      width: 260px;
       background: #ffffff;
-      border: 2px solid #333;
-      padding: 8px 12px;
-      border-radius: 6px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 15px;
+      z-index: 50;
+    }
+
+    #panel h3 {
+      margin: 0 0 10px 0;
       font-size: 18px;
+      font-weight: 700;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 8px;
+      border: 2px solid #fff;
+    }
+
+    /* HOME BUTTON */
+    #homeBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 6px;
       cursor: pointer;
-      box-shadow: 0 0 6px rgba(0,0,0,0.3);
+      font-size: 15px;
+      font-weight: 600;
       z-index: 50;
     }
   </style>
@@ -118,24 +131,125 @@
 
 <body>
 
-  <button class="home-btn" onclick="location.href='https://gussofrag.github.io/'">🏠 Home</button>
+  <!-- PANNELLO LEGENDA -->
+  <div id="panel">
+    <h3>Legenda</h3>
 
+    <div class="legend-item">
+      <div class="legend-color" style="background:#00cc44;"></div>
+      Palo Verde (Linea A)
+    </div>
+
+    <div class="legend-item">
+      <div class="legend-color" style="background:#66ccff;"></div>
+      Palo Celestino (Linea B)
+    </div>
+
+    <hr>
+
+    <div class="legend-item">📄 Elaborato Progettuale</div>
+    <div class="legend-item">📑 Documento Qualità</div>
+  </div>
+
+  <!-- HOME -->
+  <div id="homeBtn" onclick="window.location.href='../index.html'">🏠 Home</div>
+
+  <!-- MAPPA -->
   <div class="map-container" id="map">
     <img src="img/Trasformatore_01.jpg" alt="Planimetria Trasformatore 01" />
     <div id="tooltip" class="tooltip"></div>
-    <div id="menu" class="tooltip-menu"></div>
   </div>
 
   <script>
     // SCALA DI RIFERIMENTO: 1500 x 957 px
 
     const markers = [
-      { id: "palo_01", x: 671/1500,  y: 244/957, color: "verde", progetto: "pdf/P_1.pdf",  qualita: "Qualità/P_1_QLT.pdf" },
-      { id: "palo_02", x: 762/1500,  y: 244/957, color: "verde", progetto: "pdf/P_2.pdf",  qualita: "Qualità/P_2_QLT.pdf" },
-      { id: "palo_03", x: 851/1500,  y: 244/957, color: "verde", progetto: "pdf/P_3.pdf",  qualita: "Qualità/P_3_QLT.pdf" },
-      { id: "palo_04", x: 930/1500,  y: 244/957, color: "verde", progetto: "pdf/P_4.pdf",  qualita: "Qualità/P_4_QLT.pdf" },
-      { id: "palo_05", x: 1030/1500, y: 244/957, color: "verde", progetto: "pdf/P_5.pdf",  qualita: "Qualità/P_5_QLT.pdf" },
-      { id: "palo_06", x: 1120/1500, y: 244/957, color: "verde", progetto: "pdf/P_6.pdf",  qualita: "Qualità/P_6_QLT.pdf" },
+      { id: "palo_01", x: 671/1500,  y: 244/957, color: "verde" },
+      { id: "palo_02", x: 762/1500,  y: 244/957, color: "verde" },
+      { id: "palo_03", x: 851/1500,  y: 244/957, color: "verde" },
+      { id: "palo_04", x: 930/1500,  y: 244/957, color: "verde" },
+      { id: "palo_05", x: 1030/1500, y: 244/957, color: "verde" },
+      { id: "palo_06", x: 1120/1500, y: 244/957, color: "verde" },
 
-      { id: "palo_07", x: 671/1500,  y: 420/957, color: "verde", progetto: "pdf/P_7.pdf",  qualita: "Qualità/P_7_QLT.pdf" },
-      { id: "palo_08", x: 762/1500,  y: 420/957, color: "verde", progetto: "pdf/P_8.pdf",  qualita: "Qual
+      { id: "palo_07", x: 671/1500,  y: 420/957, color: "verde" },
+      { id: "palo_08", x: 762/1500,  y: 420/957, color: "verde" },
+      { id: "palo_09", x: 851/1500,  y: 420/957, color: "verde" },
+      { id: "palo_10", x: 930/1500,  y: 420/957, color: "verde" },
+      { id: "palo_11", x: 1030/1500, y: 420/957, color: "verde" },
+      { id: "palo_12", x: 1120/1500, y: 420/957, color: "verde" },
+
+      { id: "palo_13", x: 603/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_14", x: 724/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_15", x: 843/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_16", x: 962/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_17", x: 1081/1500, y: 483/957, color: "celestino" },
+      { id: "palo_18", x: 1202/1500, y: 483/957, color: "celestino" },
+
+      { id: "palo_19", x: 603/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_20", x: 724/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_21", x: 843/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_22", x: 962/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_23", x: 1081/1500, y: 583/957, color: "celestino" },
+      { id: "palo_24", x: 1202/1500, y: 583/957, color: "celestino" },
+
+      { id: "palo_25", x: 603/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_26", x: 724/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_27", x: 843/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_28", x: 962/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_29", x: 1081/1500, y: 682/957, color: "celestino" },
+      { id: "palo_30", x: 1202/1500, y: 682/957, color: "celestino" },
+
+      { id: "palo_31", x: 603/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_32", x: 724/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_33", x: 843/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_34", x: 962/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_35", x: 1081/1500, y: 782/957, color: "celestino" },
+      { id: "palo_36", x: 1202/1500, y: 782/957, color: "celestino" },
+
+      { id: "palo_37", x: 603/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_38", x: 724/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_39", x: 843/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_40", x: 962/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_41", x: 1081/1500, y: 880/957, color: "celestino" },
+      { id: "palo_42", x: 1202/1500, y: 880/957, color: "celestino" }
+    ];
+
+    const map = document.getElementById("map");
+    const tooltip = document.getElementById("tooltip");
+    let selectedMarker = null;
+
+    markers.forEach(m => {
+      const el = document.createElement("div");
+      el.id = m.id;
+      el.className = "marker " + m.color;
+
+      el.style.left = (m.x * 100) + "%";
+      el.style.top  = (m.y * 100) + "%";
+
+      el.addEventListener("mouseenter", () => {
+        tooltip.innerHTML = `
+          Palo ${m.id.replace("palo_", "")}<br>
+          <button class="btn-prog" onclick="window.open('pdf/P_${m.id.replace('palo_', '')}.pdf')">📄 Elaborato</button>
+          <button class="btn-qlt" onclick="window.open('qlt/P_${m.id.replace('palo_', '')}.pdf')">📑 Qualità</button>
+        `;
+        tooltip.style.left = (m.x * 100) + "%";
+        tooltip.style.top  = (m.y * 100) + "%";
+        tooltip.style.display = "block";
+      });
+
+      el.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+
+      el.addEventListener("click", () => {
+        if (selectedMarker) selectedMarker.classList.remove("selected");
+        el.classList.add("selected");
+        selectedMarker = el;
+      });
+
+      map.appendChild(el);
+    });
+  </script>
+
+</body>
+</html>
