@@ -311,8 +311,8 @@ img.addEventListener("load", () => {
     el.className = "marker";
     el.dataset.scapitozzato = m.scapitozzato ? "true" : "false";
 
-    const leftPercent = (m.x / imgWidth) * 100;
-    const topPercent = (m.y / imgHeight) * 100;
+    const leftPercent = m.x * 100;
+    const topPercent = m.y * 100;
 
     el.style.left = leftPercent + "%";
     el.style.top = topPercent + "%";
