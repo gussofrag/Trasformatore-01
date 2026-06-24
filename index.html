@@ -15,7 +15,7 @@
       position: relative;
       width: 100%;
       max-width: 100%;
-      height: 100vh;
+      /* lasciamo che l'altezza derivi dall'immagine */
       overflow: visible;
     }
 
@@ -147,7 +147,7 @@
 
 <body>
 
-  <!-- PULSANTE + LEGENDA -->
+  <!-- LEGENDA PROVE -->
   <div class="legend-button" onclick="toggleLegend()" title="Apri legenda">
     Legenda prove sui pali
 
@@ -195,7 +195,7 @@
   </a>
 
   <div class="map-container" id="map">
-    <img id="mapImage" src="img/Trasformatore_01.jpg">
+    <img id="mapImage" src="img/Trasformatore_01.jpg" alt="Planimetria pali Trasformatore 01">
     <div id="tooltip" class="tooltip"></div>
   </div>
 
@@ -227,58 +227,57 @@
       });
     }
 
-    /* MARKER TRASFORMATORE 01 – COORDINATE IN PIXEL NORMALIZZATE */
-   const markers = [
-  const markers = [
-  { id: "palo_01", x: 671/1269,  y: 244/810, color: "verde" },
-  { id: "palo_02", x: 762/1269,  y: 244/810, color: "verde" },
-  { id: "palo_03", x: 851/1269,  y: 244/810, color: "verde" },
-  { id: "palo_04", x: 930/1269,  y: 244/810, color: "verde" },
-  { id: "palo_05", x: 1030/1269, y: 244/810, color: "verde" },
-  { id: "palo_06", x: 1120/1269, y: 244/810, color: "verde" },
-     
-  { id: "palo_07", x: 671/1269,  y: 420/810, color: "verde" },
-  { id: "palo_08", x: 762/1269,  y: 420/810, color: "verde" },
-  { id: "palo_09", x: 851/1269,  y: 420/810, color: "verde" },
-  { id: "palo_10", x: 930/1269,  y: 420/810, color: "verde" },
-  { id: "palo_11", x: 1030/1269, y: 420/810, color: "verde" },
-  { id: "palo_12", x: 1120/1269, y: 420/810, color: "verde" },
+    /* MARKER TRASFORMATORE 01 – COORDINATE NORMALIZZATE SU 1269×810 */
+    const markers = [
+      { id: "palo_01", x: 671/1269,  y: 244/810, color: "verde" },
+      { id: "palo_02", x: 762/1269,  y: 244/810, color: "verde" },
+      { id: "palo_03", x: 851/1269,  y: 244/810, color: "verde" },
+      { id: "palo_04", x: 930/1269,  y: 244/810, color: "verde" },
+      { id: "palo_05", x: 1030/1269, y: 244/810, color: "verde" },
+      { id: "palo_06", x: 1120/1269, y: 244/810, color: "verde" },
 
-  { id: "palo_13", x: 603/1269,  y: 483/810, color: "celestino" },
-  { id: "palo_14", x: 724/1269,  y: 483/810, color: "celestino" },
-  { id: "palo_15", x: 843/1269,  y: 483/810, color: "celestino" },
-  { id: "palo_16", x: 962/1269,  y: 483/810, color: "celestino" },
-  { id: "palo_17", x: 1081/1269, y: 483/810, color: "celestino" },
-  { id: "palo_18", x: 1202/1269, y: 483/810, color: "celestino" },
+      { id: "palo_07", x: 671/1269,  y: 420/810, color: "verde" },
+      { id: "palo_08", x: 762/1269,  y: 420/810, color: "verde" },
+      { id: "palo_09", x: 851/1269,  y: 420/810, color: "verde" },
+      { id: "palo_10", x: 930/1269,  y: 420/810, color: "verde" },
+      { id: "palo_11", x: 1030/1269, y: 420/810, color: "verde" },
+      { id: "palo_12", x: 1120/1269, y: 420/810, color: "verde" },
 
-  { id: "palo_19", x: 603/1269,  y: 583/810, color: "celestino" },
-  { id: "palo_20", x: 724/1269,  y: 583/810, color: "celestino" },
-  { id: "palo_21", x: 843/1269,  y: 583/810, color: "celestino" },
-  { id: "palo_22", x: 962/1269,  y: 583/810, color: "celestino" },
-  { id: "palo_23", x: 1081/1269, y: 583/810, color: "celestino" },
-  { id: "palo_24", x: 1202/1269, y: 583/810, color: "celestino" },
+      { id: "palo_13", x: 603/1269,  y: 483/810, color: "celestino" },
+      { id: "palo_14", x: 724/1269,  y: 483/810, color: "celestino" },
+      { id: "palo_15", x: 843/1269,  y: 483/810, color: "celestino" },
+      { id: "palo_16", x: 962/1269,  y: 483/810, color: "celestino" },
+      { id: "palo_17", x: 1081/1269, y: 483/810, color: "celestino" },
+      { id: "palo_18", x: 1202/1269, y: 483/810, color: "celestino" },
 
-  { id: "palo_25", x: 603/1269,  y: 682/810, color: "celestino" },
-  { id: "palo_26", x: 724/1269,  y: 682/810, color: "celestino" },
-  { id: "palo_27", x: 843/1269,  y: 682/810, color: "celestino" },
-  { id: "palo_28", x: 962/1269,  y: 682/810, color: "celestino" },
-  { id: "palo_29", x: 1081/1269, y: 682/810, color: "celestino" },
-  { id: "palo_30", x: 1202/1269, y: 682/810, color: "celestino" },
+      { id: "palo_19", x: 603/1269,  y: 583/810, color: "celestino" },
+      { id: "palo_20", x: 724/1269,  y: 583/810, color: "celestino" },
+      { id: "palo_21", x: 843/1269,  y: 583/810, color: "celestino" },
+      { id: "palo_22", x: 962/1269,  y: 583/810, color: "celestino" },
+      { id: "palo_23", x: 1081/1269, y: 583/810, color: "celestino" },
+      { id: "palo_24", x: 1202/1269, y: 583/810, color: "celestino" },
 
-  { id: "palo_31", x: 603/1269,  y: 782/810, color: "celestino" },
-  { id: "palo_32", x: 724/1269,  y: 782/810, color: "celestino", prova: "sonica" },
-  { id: "palo_33", x: 843/1269,  y: 782/810, color: "celestino" },
-  { id: "palo_34", x: 962/1269,  y: 782/810, color: "celestino" },
-  { id: "palo_35", x: 1081/1269, y: 782/810, color: "celestino", prova: "carico" },
-  { id: "palo_36", x: 1202/1269, y: 782/810, color: "celestino" },
+      { id: "palo_25", x: 603/1269,  y: 682/810, color: "celestino" },
+      { id: "palo_26", x: 724/1269,  y: 682/810, color: "celestino" },
+      { id: "palo_27", x: 843/1269,  y: 682/810, color: "celestino" },
+      { id: "palo_28", x: 962/1269,  y: 682/810, color: "celestino" },
+      { id: "palo_29", x: 1081/1269, y: 682/810, color: "celestino" },
+      { id: "palo_30", x: 1202/1269, y: 682/810, color: "celestino" },
 
-  { id: "palo_37", x: 603/1269,  y: 880/810, color: "celestino" },
-  { id: "palo_38", x: 724/1269,  y: 880/810, color: "celestino" },
-  { id: "palo_39", x: 843/1269,  y: 880/810, color: "celestino", prova: "sonica" },
-  { id: "palo_40", x: 962/1269,  y: 880/810, color: "celestino" },
-  { id: "palo_41", x: 1081/1269, y: 880/810, color: "celestino" },
-  { id: "palo_42", x: 1202/1269, y: 880/810, color: "celestino" }
-];
+      { id: "palo_31", x: 603/1269,  y: 782/810, color: "celestino" },
+      { id: "palo_32", x: 724/1269,  y: 782/810, color: "celestino", prova: "sonica" },
+      { id: "palo_33", x: 843/1269,  y: 782/810, color: "celestino" },
+      { id: "palo_34", x: 962/1269,  y: 782/810, color: "celestino" },
+      { id: "palo_35", x: 1081/1269, y: 782/810, color: "celestino", prova: "carico" },
+      { id: "palo_36", x: 1202/1269, y: 782/810, color: "celestino" },
+
+      { id: "palo_37", x: 603/1269,  y: 880/810, color: "celestino" },
+      { id: "palo_38", x: 724/1269,  y: 880/810, color: "celestino" },
+      { id: "palo_39", x: 843/1269,  y: 880/810, color: "celestino", prova: "sonica" },
+      { id: "palo_40", x: 962/1269,  y: 880/810, color: "celestino" },
+      { id: "palo_41", x: 1081/1269, y: 880/810, color: "celestino" },
+      { id: "palo_42", x: 1202/1269, y: 880/810, color: "celestino" }
+    ];
 
     /* FUNZIONE PER APRIRE IL PDF CORRETTO */
     function getPdfForMarker(id) {
@@ -291,7 +290,6 @@
     const tooltip = document.getElementById("tooltip");
 
     function createMarkers() {
-      // pulizia eventuali marker precedenti
       document.querySelectorAll('.marker').forEach(m => m.remove());
 
       markers.forEach(m => {
@@ -348,7 +346,6 @@
       });
     }
 
-    // assicuriamoci che l'immagine sia caricata, poi creiamo i marker
     if (img.complete) {
       createMarkers();
     } else {
