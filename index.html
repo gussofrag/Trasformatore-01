@@ -141,109 +141,92 @@
       align-items: center;
       margin-bottom: 8px;
     }
-
-    .legend-panel .item span.icon {
-      font-size: 18px;
-      margin-right: 8px;
-    }
-
-    /* HOME */
-    .home-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.75);
-      padding: 10px;
-      border-radius: 50%;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-<!-- LEGENDA -->
-<div class="legend-button" onclick="toggleLegend()">
+  <!-- 🔥 PULSANTE + LEGENDA (LEGEND PANEL DENTRO IL PULSANTE) -->
+<div class="legend-button" onclick="toggleLegend()" title="Apri legenda">
   Legenda prove sui pali
 
   <div id="legendPanel" class="legend-panel">
     <div class="item">
-      <span class="icon" style="color:#00cc44;">●</span>
-      <span>Palo Verde (Linea A)</span>
+      <span class="icon">🏋️</span>
+      <span>Prova di carico 1,5×PSE<br><small>Pali: 387, 427</small></span>
     </div>
 
     <div class="item">
-      <span class="icon" style="color:#66ccff;">●</span>
-      <span>Palo Celestino (Linea B)</span>
-    </div>
-
-    <hr style="border-color:#444; margin:10px 0;">
-
-    <div class="item">
-      <span class="icon">📄</span>
-      <span>Elaborato Progettuale</span>
-    </div>
-
-    <div class="item">
-      <span class="icon">📑</span>
-      <span>Documento Qualità</span>
+      <span class="icon">📡</span>
+      <span>Prova sonica “cross-hole”<br><small>Pali: 375, 405, 417</small></span>
     </div>
   </div>
 </div>
 
-<!-- SCAPITOZZATI -->
+  <!-- 🔨 PULSANTE SCAPITOZZATI -->
 <div class="legend-button" onclick="toggleScapitozzati()" style="top: 60px; right: 180px;">
   ⛏️ Pali scapitozzati
 </div>
 
-<!-- HOME -->
-<a href="https://gussofrag.github.io/Key-Plant/" class="home-btn">
+<!-- 🔙 PULSANTE HOME -->
+<a href="https://gussofrag.github.io/Key-Plant/"
+   style="
+     position: fixed;
+     top: 20px;
+     right: 20px;
+     background: rgba(0,0,0,0.75);
+     padding: 10px;
+     border-radius: 50%;
+     box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+     z-index: 9999;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 48px;
+     height: 48px;
+     transition: 0.2s;
+     cursor: pointer;
+   "
+   title="Torna alla Key Plant">
+  
   <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
     <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z"/>
   </svg>
+
 </a>
 
-<!-- MAPPA -->
 <div class="map-container" id="map">
-  <img src="img/Trasformatore_01.jpg" id="mapImage" />
+  <img src="jpg/Mappa_pali_sala_CC2.jpg">
   <div id="tooltip" class="tooltip"></div>
 </div>
 
 <script>
-  function toggleLegend() {
-    const panel = document.getElementById("legendPanel");
-    panel.style.display = (panel.style.display === "block") ? "none" : "block";
-  }
+function toggleLegend() {
+  const panel = document.getElementById("legendPanel");
+  panel.style.display = (panel.style.display === "block") ? "none" : "block";
+}
 
-  let filterScapitozzati = false;
+let filterScapitozzati = false;
 
-  function toggleScapitozzati() {
-    filterScapitozzati = !filterScapitozzati;
+function toggleScapitozzati() {
+  filterScapitozzati = !filterScapitozzati;
 
-    document.querySelectorAll('.marker').forEach(marker => {
-      const isScapitozzato = marker.dataset.scapitozzato === "true";
+  document.querySelectorAll('.marker').forEach(marker => {
+    const isScapitozzato = marker.dataset.scapitozzato === "true";
 
-      if (filterScapitozzati) {
-        if (isScapitozzato) {
-          marker.style.display = "block";
-          marker.classList.add("scapitozzato-attivo");
-        } else {
-          marker.style.display = "none";
-        }
-      } else {
+    if (filterScapitozzati) {
+      if (isScapitozzato) {
         marker.style.display = "block";
-        marker.classList.remove("scapitozzato-attivo");
+        marker.classList.add("scapitozzato-attivo");
+      } else {
+        marker.style.display = "none";
       }
-    });
-  }
+    } else {
+      marker.style.display = "block";
+      marker.classList.remove("scapitozzato-attivo");
+    }
+  });
+}
 
   /* MARKER TRASFORMATORE 01 – COORDINATE IN PIXEL NORMALIZZATE */
   const markers = [
