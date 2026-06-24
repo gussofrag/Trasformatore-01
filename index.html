@@ -11,13 +11,14 @@
       background: #f0f0f0;
     }
 
- .map-container {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  height: 100vh;   /* ← questa è la riga che ti mancava */
-  overflow: visible;
-}
+    .map-container {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      height: 100vh;
+      overflow: visible;
+    }
+
     .map-container img {
       width: 100%;
       height: auto;
@@ -66,7 +67,7 @@
       margin: 3px 0;
     }
 
-    /* ❌ CROCE SOLO QUANDO IL FILTRO È ATTIVO */
+    /* CROCE SCAPITOZZATI QUANDO FILTRO ATTIVO */
     .marker.scapitozzato-attivo::before {
       content: "✚";
       position: absolute;
@@ -141,225 +142,218 @@
       align-items: center;
       margin-bottom: 8px;
     }
-</style>
+  </style>
 </head>
 
 <body>
 
-  <!-- 🔥 PULSANTE + LEGENDA (LEGEND PANEL DENTRO IL PULSANTE) -->
-<div class="legend-button" onclick="toggleLegend()" title="Apri legenda">
-  Legenda prove sui pali
+  <!-- PULSANTE + LEGENDA -->
+  <div class="legend-button" onclick="toggleLegend()" title="Apri legenda">
+    Legenda prove sui pali
 
-  <div id="legendPanel" class="legend-panel">
-    <div class="item">
-      <span class="icon">🏋️</span>
-      <span>Prova di carico 1,5×PSE<br><small>Pali: 32</small></span>
-    </div>
+    <div id="legendPanel" class="legend-panel">
+      <div class="item">
+        <span class="icon">🏋️</span>
+        <span>Prova di carico 1,5×PSE<br><small>Palo: 35</small></span>
+      </div>
 
-    <div class="item">
-      <span class="icon">📡</span>
-      <span>Prova sonica “cross-hole”<br><small>Pali: 35, 40</small></span>
+      <div class="item">
+        <span class="icon">📡</span>
+        <span>Prova sonica “cross-hole”<br><small>Pali: 32, 39</small></span>
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- 🔨 PULSANTE SCAPITOZZATI -->
-<div class="legend-button" onclick="toggleScapitozzati()" style="top: 60px; right: 180px;">
-  ⛏️ Pali scapitozzati
-</div>
+  <!-- PULSANTE SCAPITOZZATI -->
+  <div class="legend-button" onclick="toggleScapitozzati()" style="top: 60px; right: 180px;">
+    ⛏️ Pali scapitozzati
+  </div>
 
-<!-- 🔙 PULSANTE HOME -->
-<a href="https://gussofrag.github.io/Key-Plant/"
-   style="
-     position: fixed;
-     top: 20px;
-     right: 20px;
-     background: rgba(0,0,0,0.75);
-     padding: 10px;
-     border-radius: 50%;
-     box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-     z-index: 9999;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     width: 48px;
-     height: 48px;
-     transition: 0.2s;
-     cursor: pointer;
-   "
-   title="Torna alla Key Plant">
-  
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-    <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z"/>
-  </svg>
+  <!-- PULSANTE HOME -->
+  <a href="https://gussofrag.github.io/Key-Plant/"
+     style="
+       position: fixed;
+       top: 20px;
+       right: 20px;
+       background: rgba(0,0,0,0.75);
+       padding: 10px;
+       border-radius: 50%;
+       box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+       z-index: 9999;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       width: 48px;
+       height: 48px;
+       transition: 0.2s;
+       cursor: pointer;
+     "
+     title="Torna alla Key Plant">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+      <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z"/>
+    </svg>
+  </a>
 
-</a>
+  <div class="map-container" id="map">
+    <img id="mapImage" src="jpg/Trasformatore_01.jpg">
+    <div id="tooltip" class="tooltip"></div>
+  </div>
 
-<div class="map-container" id="map">
-  <img id="mapImage" src="jpg/Trasformatore_01.jpg">
-  <div id="tooltip" class="tooltip"></div>
-</div>
-
-<script>
-function toggleLegend() {
-  const panel = document.getElementById("legendPanel");
-  panel.style.display = (panel.style.display === "block") ? "none" : "block";
-}
-
-let filterScapitozzati = false;
-
-function toggleScapitozzati() {
-  filterScapitozzati = !filterScapitozzati;
-
-  document.querySelectorAll('.marker').forEach(marker => {
-    const isScapitozzato = marker.dataset.scapitozzato === "true";
-
-    if (filterScapitozzati) {
-      if (isScapitozzato) {
-        marker.style.display = "block";
-        marker.classList.add("scapitozzato-attivo");
-      } else {
-        marker.style.display = "none";
-      }
-    } else {
-      marker.style.display = "block";
-      marker.classList.remove("scapitozzato-attivo");
+  <script>
+    function toggleLegend() {
+      const panel = document.getElementById("legendPanel");
+      panel.style.display = (panel.style.display === "block") ? "none" : "block";
     }
-  });
-}
 
-  /* MARKER TRASFORMATORE 01 – COORDINATE IN PIXEL NORMALIZZATE */
-  const markers = [
-    { id: "palo_01", x: 671/1500,  y: 244/957, color: "verde" },
-    { id: "palo_02", x: 762/1500,  y: 244/957, color: "verde" },
-    { id: "palo_03", x: 851/1500,  y: 244/957, color: "verde" },
-    { id: "palo_04", x: 940/1500,  y: 244/957, color: "verde" },
-    { id: "palo_05", x: 1030/1500, y: 244/957, color: "verde" },
-    { id: "palo_06", x: 1120/1500, y: 244/957, color: "verde" },
+    let filterScapitozzati = false;
 
-    { id: "palo_07", x: 671/1500,  y: 420/957, color: "verde" },
-    { id: "palo_08", x: 762/1500,  y: 420/957, color: "verde" },
-    { id: "palo_09", x: 851/1500,  y: 420/957, color: "verde" },
-    { id: "palo_10", x: 940/1500,  y: 420/957, color: "verde" },
-    { id: "palo_11", x: 1030/1500, y: 420/957, color: "verde" },
-    { id: "palo_12", x: 1120/1500, y: 420/957, color: "verde" },
+    function toggleScapitozzati() {
+      filterScapitozzati = !filterScapitozzati;
 
-    { id: "palo_13", x: 603/1500,  y: 483/957, color: "celestino" },
-    { id: "palo_14", x: 724/1500,  y: 483/957, color: "celestino" },
-    { id: "palo_15", x: 843/1500,  y: 483/957, color: "celestino" },
-    { id: "palo_16", x: 962/1500,  y: 483/957, color: "celestino" },
-    { id: "palo_17", x: 1081/1500, y: 483/957, color: "celestino" },
-    { id: "palo_18", x: 1202/1500, y: 483/957, color: "celestino" },
+      document.querySelectorAll('.marker').forEach(marker => {
+        const isScapitozzato = marker.dataset.scapitozzato === "true";
 
-    { id: "palo_19", x: 603/1500,  y: 583/957, color: "celestino" },
-    { id: "palo_20", x: 724/1500,  y: 583/957, color: "celestino" },
-    { id: "palo_21", x: 843/1500,  y: 583/957, color: "celestino" },
-    { id: "palo_22", x: 962/1500,  y: 583/957, color: "celestino" },
-    { id: "palo_23", x: 1081/1500, y: 583/957, color: "celestino" },
-    { id: "palo_24", x: 1202/1500, y: 583/957, color: "celestino" },
-
-    { id: "palo_25", x: 603/1500,  y: 682/957, color: "celestino" },
-    { id: "palo_26", x: 724/1500,  y: 682/957, color: "celestino" },
-    { id: "palo_27", x: 843/1500,  y: 682/957, color: "celestino" },
-    { id: "palo_28", x: 962/1500,  y: 682/957, color: "celestino" },
-    { id: "palo_29", x: 1081/1500, y: 682/957, color: "celestino" },
-    { id: "palo_30", x: 1202/1500, y: 682/957, color: "celestino" },
-
-    { id: "palo_31", x: 603/1500,  y: 782/957, color: "celestino" },
-    { id: "palo_32", x: 724/1500,  y: 782/957, color: "celestino", prova: "sonica" },
-    { id: "palo_33", x: 843/1500,  y: 782/957, color: "celestino" },
-    { id: "palo_34", x: 962/1500,  y: 782/957, color: "celestino" },
-    { id: "palo_35", x: 1081/1500, y: 782/957, color: "celestino", prova: "carico" },
-    { id: "palo_36", x: 1202/1500, y: 782/957, color: "celestino" },
-
-    { id: "palo_37", x: 603/1500,  y: 880/957, color: "celestino" },
-    { id: "palo_38", x: 724/1500,  y: 880/957, color: "celestino" },
-    { id: "palo_39", x: 843/1500,  y: 880/957, color: "celestino", prova: "sonica" },
-    { id: "palo_40", x: 962/1500,  y: 880/957, color: "celestino" },
-    { id: "palo_41", x: 1081/1500, y: 880/957, color: "celestino" },
-    { id: "palo_42", x: 1202/1500, y: 880/957, color: "celestino" }
-  ];
-
-  /* FUNZIONE PER APRIRE IL PDF CORRETTO */
-  function getPdfForMarker(id) {
-    const numero = id.replace("palo_", "").padStart(2, "0");
-    return `pdf/P_${numero}.pdf`;
-  }
-
-  const map = document.getElementById("map");
-  const img = document.getElementById("mapImage");
-  const tooltip = document.getElementById("tooltip");
-
-  function createMarkers() {
-    // pulizia eventuali marker precedenti
-    document.querySelectorAll('.marker').forEach(m => m.remove());
-
-    markers.forEach(m => {
-      const el = document.createElement("div");
-      el.className = "marker";
-      el.dataset.scapitozzato = m.scapitozzato ? "true" : "false";
-
-      const leftPercent = m.x * 100;
-      const topPercent = m.y * 100;
-
-      el.style.left = leftPercent + "%";
-      el.style.top = topPercent + "%";
-
-      // colore
-      el.style.background = (m.color === "verde") ? "#00cc44" : "#66ccff";
-
-      // click → apre PDF
-      el.addEventListener("click", () => {
-        const pdfPath = getPdfForMarker(m.id);
-        window.open(pdfPath, "_blank");
+        if (filterScapitozzati) {
+          if (isScapitozzato) {
+            marker.style.display = "block";
+            marker.classList.add("scapitozzato-attivo");
+          } else {
+            marker.style.display = "none";
+          }
+        } else {
+          marker.style.display = "block";
+          marker.classList.remove("scapitozzato-attivo");
+        }
       });
+    }
 
-      // tooltip
-      let hideTimeout;
+    /* MARKER TRASFORMATORE 01 – COORDINATE IN PIXEL NORMALIZZATE */
+    const markers = [
+      { id: "palo_01", x: 671/1500,  y: 244/957, color: "verde" },
+      { id: "palo_02", x: 762/1500,  y: 244/957, color: "verde" },
+      { id: "palo_03", x: 851/1500,  y: 244/957, color: "verde" },
+      { id: "palo_04", x: 940/1500,  y: 244/957, color: "verde" },
+      { id: "palo_05", x: 1030/1500, y: 244/957, color: "verde" },
+      { id: "palo_06", x: 1120/1500, y: 244/957, color: "verde" },
 
-      el.addEventListener("mouseenter", () => {
-        clearTimeout(hideTimeout);
+      { id: "palo_07", x: 671/1500,  y: 420/957, color: "verde" },
+      { id: "palo_08", x: 762/1500,  y: 420/957, color: "verde" },
+      { id: "palo_09", x: 851/1500,  y: 420/957, color: "verde" },
+      { id: "palo_10", x: 940/1500,  y: 420/957, color: "verde" },
+      { id: "palo_11", x: 1030/1500, y: 420/957, color: "verde" },
+      { id: "palo_12", x: 1120/1500, y: 420/957, color: "verde" },
 
-        const pdfPath = getPdfForMarker(m.id);
-        const numero = m.id.replace("palo_", "").padStart(2, "0");
+      { id: "palo_13", x: 603/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_14", x: 724/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_15", x: 843/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_16", x: 962/1500,  y: 483/957, color: "celestino" },
+      { id: "palo_17", x: 1081/1500, y: 483/957, color: "celestino" },
+      { id: "palo_18", x: 1202/1500, y: 483/957, color: "celestino" },
 
-        tooltip.innerHTML = `
-          <div><strong>${m.id}</strong></div>
-          <a href="${pdfPath}" target="_blank">📄 Elaborato Progettuale</a>
-          <a href="Qualità/P_${numero}_QLT.pdf" target="_blank">📑 Documento Qualità</a>
-        `;
+      { id: "palo_19", x: 603/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_20", x: 724/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_21", x: 843/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_22", x: 962/1500,  y: 583/957, color: "celestino" },
+      { id: "palo_23", x: 1081/1500, y: 583/957, color: "celestino" },
+      { id: "palo_24", x: 1202/1500, y: 583/957, color: "celestino" },
 
-        tooltip.style.left = leftPercent + "%";
-        tooltip.style.top = topPercent + "%";
-        tooltip.style.display = "block";
+      { id: "palo_25", x: 603/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_26", x: 724/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_27", x: 843/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_28", x: 962/1500,  y: 682/957, color: "celestino" },
+      { id: "palo_29", x: 1081/1500, y: 682/957, color: "celestino" },
+      { id: "palo_30", x: 1202/1500, y: 682/957, color: "celestino" },
+
+      { id: "palo_31", x: 603/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_32", x: 724/1500,  y: 782/957, color: "celestino", prova: "sonica" },
+      { id: "palo_33", x: 843/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_34", x: 962/1500,  y: 782/957, color: "celestino" },
+      { id: "palo_35", x: 1081/1500, y: 782/957, color: "celestino", prova: "carico" },
+      { id: "palo_36", x: 1202/1500, y: 782/957, color: "celestino" },
+
+      { id: "palo_37", x: 603/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_38", x: 724/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_39", x: 843/1500,  y: 880/957, color: "celestino", prova: "sonica" },
+      { id: "palo_40", x: 962/1500,  y: 880/957, color: "celestino" },
+      { id: "palo_41", x: 1081/1500, y: 880/957, color: "celestino" },
+      { id: "palo_42", x: 1202/1500, y: 880/957, color: "celestino" }
+    ];
+
+    /* FUNZIONE PER APRIRE IL PDF CORRETTO */
+    function getPdfForMarker(id) {
+      const numero = id.replace("palo_", "").padStart(2, "0");
+      return `pdf/P_${numero}.pdf`;
+    }
+
+    const map = document.getElementById("map");
+    const img = document.getElementById("mapImage");
+    const tooltip = document.getElementById("tooltip");
+
+    function createMarkers() {
+      // pulizia eventuali marker precedenti
+      document.querySelectorAll('.marker').forEach(m => m.remove());
+
+      markers.forEach(m => {
+        const el = document.createElement("div");
+        el.className = "marker";
+        el.dataset.scapitozzato = m.scapitozzato ? "true" : "false";
+
+        const leftPercent = m.x * 100;
+        const topPercent = m.y * 100;
+
+        el.style.left = leftPercent + "%";
+        el.style.top = topPercent + "%";
+
+        // colore
+        el.style.background = (m.color === "verde") ? "#00cc44" : "#66ccff";
+
+        // icone prove
+        if (m.prova === "carico") el.classList.add("prova-carico");
+        if (m.prova === "sonica") el.classList.add("prova-sonica");
+
+        // click → apre PDF
+        el.addEventListener("click", () => {
+          const pdfPath = getPdfForMarker(m.id);
+          window.open(pdfPath, "_blank");
+        });
+
+        // tooltip
+        let hideTimeout;
+
+        el.addEventListener("mouseenter", () => {
+          clearTimeout(hideTimeout);
+
+          const pdfPath = getPdfForMarker(m.id);
+          const numero = m.id.replace("palo_", "").padStart(2, "0");
+
+          tooltip.innerHTML = `
+            <div><strong>${m.id}</strong></div>
+            <a href="${pdfPath}" target="_blank">📄 Elaborato Progettuale</a>
+            <a href="Qualità/P_${numero}_QLT.pdf" target="_blank">📑 Documento Qualità</a>
+          `;
+
+          tooltip.style.left = leftPercent + "%";
+          tooltip.style.top = topPercent + "%";
+          tooltip.style.display = "block";
+        });
+
+        el.addEventListener("mouseleave", () => {
+          hideTimeout = setTimeout(() => {
+            tooltip.style.display = "none";
+          }, 200);
+        });
+
+        map.appendChild(el);
       });
+    }
 
-      el.addEventListener("mouseleave", () => {
-        hideTimeout = setTimeout(() => {
-          tooltip.style.display = "none";
-        }, 200);
-      });
-
-      tooltip.addEventListener("mouseenter", () => {
-        clearTimeout(hideTimeout);
-        tooltip.style.display = "block";
-      });
-
-      tooltip.addEventListener("mouseleave", () => {
-        tooltip.style.display = "none";
-      });
-
-      map.appendChild(el);
-    });
-  }
-
-  // assicuriamoci che l'immagine sia caricata, poi creiamo i marker
-  if (img.complete) {
-    createMarkers();
-  } else {
-    img.addEventListener("load", createMarkers);
-  }
-</script>
+    // assicuriamoci che l'immagine sia caricata, poi creiamo i marker
+    if (img.complete) {
+      createMarkers();
+    } else {
+      img.addEventListener("load", createMarkers);
+    }
+  </script>
 
 </body>
 </html>
