@@ -15,7 +15,6 @@
       position: relative;
       width: 100%;
       max-width: 100%;
-      /* lasciamo che l'altezza derivi dall'immagine */
       overflow: visible;
     }
 
@@ -67,7 +66,7 @@
       margin: 3px 0;
     }
 
-    /* CROCE SCAPITOZZATI QUANDO FILTRO ATTIVO */
+    /* CROCE SCAPITOZZATI */
     .marker.scapitozzato-attivo::before {
       content: "✚";
       position: absolute;
@@ -224,6 +223,8 @@
           marker.style.display = "block";
           marker.classList.remove("scapitozzato-attivo");
         }
+      });
+    }
 
     /* MARKER TRASFORMATORE 01 – COORDINATE NORMALIZZATE SU 1269×810 */
     const markers = [
@@ -301,20 +302,16 @@
         el.style.left = leftPercent + "%";
         el.style.top = topPercent + "%";
 
-        // colore
         el.style.background = (m.color === "verde") ? "#00cc44" : "#66ccff";
 
-        // icone prove
         if (m.prova === "carico") el.classList.add("prova-carico");
         if (m.prova === "sonica") el.classList.add("prova-sonica");
 
-        // click → apre PDF
         el.addEventListener("click", () => {
           const pdfPath = getPdfForMarker(m.id);
           window.open(pdfPath, "_blank");
         });
 
-        // tooltip
         let hideTimeout;
 
         el.addEventListener("mouseenter", () => {
