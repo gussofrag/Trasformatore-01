@@ -22,9 +22,9 @@
       width: 100%;
       height: auto;
       display: block;
-      }
-  
-      /* MARKER */
+    }
+
+    /* MARKER */
     .marker {
       position: absolute;
       width: 12px;
@@ -56,6 +56,7 @@
       transform: translate(-50%, -120%);
       display: none;
       z-index: 30;
+      pointer-events: auto; /* 🔥 NECESSARIO */
     }
 
     .tooltip a {
@@ -81,14 +82,14 @@
       z-index: 9999;
     }
 
-    /* PROVE */
+    /* PROVE – icone ingrandite e spostate */
     .marker.prova-carico::after {
       content: "🏋️";
       position: absolute;
       top: 50%;
-      left: -26px;
+      left: -38px;   /* 🔥 SPOSTATO PIÙ A SINISTRA */
       transform: translateY(-50%);
-      font-size: 20px;
+      font-size: 30px;   /* 🔥 INGRANDITO */
       pointer-events: none;
     }
 
@@ -96,9 +97,9 @@
       content: "📡";
       position: absolute;
       top: 50%;
-      left: -26px;
+      left: -38px;   /* 🔥 SPOSTATO PIÙ A SINISTRA */
       transform: translateY(-50%);
-      font-size: 20px;
+      font-size: 30px;   /* 🔥 INGRANDITO */
       pointer-events: none;
     }
 
@@ -312,6 +313,7 @@
           window.open(pdfPath, "_blank");
         });
 
+        /* 🔥 SISTEMA TOOLTIP MIGLIORATO */
         let hideTimeout;
 
         el.addEventListener("mouseenter", () => {
@@ -332,6 +334,17 @@
         });
 
         el.addEventListener("mouseleave", () => {
+          hideTimeout = setTimeout(() => {
+            tooltip.style.display = "none";
+          }, 200);
+        });
+
+        tooltip.addEventListener("mouseenter", () => {
+          clearTimeout(hideTimeout);
+          tooltip.style.display = "block";
+        });
+
+        tooltip.addEventListener("mouseleave", () => {
           hideTimeout = setTimeout(() => {
             tooltip.style.display = "none";
           }, 200);
